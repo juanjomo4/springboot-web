@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.curso.springboot.webapp.springboot_web.models.dto.ParamDto;
 import com.example.curso.springboot.webapp.springboot_web.models.dto.ParamMixDto;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("api/params")
 public class RequestParamsController {
@@ -30,6 +32,24 @@ public class RequestParamsController {
         paramMixDto.setMessage(text);
         paramMixDto.setCode(code);
         return paramMixDto;
+    }
+
+    // Este método recibe los parámetros "text" y "code" a través de un objeto HttpServletRequest.
+    // Los parámetros se obtienen directamente del objeto request,
+    // lo que permite acceder a ellos de manera más flexible.
+    @GetMapping("request")
+    public ParamMixDto bar(HttpServletRequest request) {
+        Integer code;
+        try {
+            code = Integer.valueOf(request.getParameter("code"));
+        } catch (NumberFormatException e) {
+            // Manejo de excepción si el parámetro "code" no es un número válido
+            code = 0; // Valor por defecto en caso de error
+        }
+        ParamMixDto params = new ParamMixDto();
+        params.setCode(code);
+        params.setMessage(request.getParameter("text"));
+        return params;
     }
 
 }
