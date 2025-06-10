@@ -1,8 +1,10 @@
 package com.example.curso.springboot.webapp.springboot_web.controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,29 @@ import com.example.curso.springboot.webapp.springboot_web.models.dto.ParamDto;
 @RestController
 @RequestMapping("/api/var")
 public class PathVariableController {
+
+    // Atributos de la clase PathVariableController desde application.properties
+    @Value("${config.code}")
+    private Integer code;
+    @Value("${config.username}")
+    private String username;
+    @Value("${config.password}")
+    private String password;
+    @Value("${config.message}")
+    private String message;
+    @Value("${config.listOfStrings}")
+    private List<String> listOfStrings;
+    // Este atributo se utiliza para almacenar una lista de cadenas de texto (strings)
+    // que se configuran en application.properties.
+    // La anotación @Value permite inyectar el valor de la propiedad en la lista.
+    // De esta forma se separan los valores por comas dentro de la lista de forma manual.
+    @Value("#{'${config.listOfStrings}'.toUpperCase().split(',')}")
+    private List<String> listOfStringsWithSplit;
+    // Este atributo se utiliza para almacenar un mapa de valores clave-valor
+    @Value("#{${config.valuesMap}}")
+    private Map<String, Object> valuesMap;
+    @Value("#{${config.valuesMap}.product}")
+    private String product;
 
     // Este método recibe un parámetro de tipo String llamado "message" a través de la URL.
     // El parámetro "message" es obligatorio, lo que significa que debe incluirse en la URL.
@@ -49,4 +74,18 @@ public class PathVariableController {
         return user;
     }
 
+    @GetMapping("/values")
+    public Map<String, Object> values() {
+        // Este método devuelve un mapa con los valores de las propiedades configuradas en application.properties.
+        Map<String, Object> json = new HashMap<>();
+        json.put("code", code);
+        json.put("username", username);
+        json.put("password", password);
+        json.put("message", message);
+        json.put("listOfStrings", listOfStrings);
+        json.put("listOfStringsWithSplit", listOfStringsWithSplit);
+        json.put("valuesMap", valuesMap);
+        json.put("product", product);
+        return json;
+    }
 }
