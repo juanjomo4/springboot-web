@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,6 +44,11 @@ public class PathVariableController {
     @Value("#{${config.valuesMap}.product}")
     private String product;
 
+    // Inyección de dependencias para acceder a las propiedades del entorno de Spring
+    // Esto permite acceder a las propiedades configuradas en application.properties
+    @Autowired
+    private Environment environment;
+
     // Este método recibe un parámetro de tipo String llamado "message" a través de la URL.
     // El parámetro "message" es obligatorio, lo que significa que debe incluirse en la URL.
     @GetMapping("/baz{message}")
@@ -78,10 +85,13 @@ public class PathVariableController {
     public Map<String, Object> values() {
         // Este método devuelve un mapa con los valores de las propiedades configuradas en application.properties.
         Map<String, Object> json = new HashMap<>();
-        json.put("code", code);
+        json.put("code", environment.getProperty("config.code"));
         json.put("username", username);
         json.put("password", password);
         json.put("message", message);
+        // De esta forma se obtiene el valor de la propiedad "config.message" del archivo application.properties
+        json.put("message2", environment.getProperty("config.message"));
+        json.put("code2", code);
         json.put("listOfStrings", listOfStrings);
         json.put("listOfStringsWithSplit", listOfStringsWithSplit);
         json.put("valuesMap", valuesMap);

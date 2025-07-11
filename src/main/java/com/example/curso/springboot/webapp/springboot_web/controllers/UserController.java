@@ -1,6 +1,5 @@
 package com.example.curso.springboot.webapp.springboot_web.controllers;
 
-// import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,11 +17,10 @@ public class UserController {
     //Pasar parámetros a la vista
     @GetMapping("/details")
     public String details(Model model) {
-        User user = new User("Jose", "Moral");
-        // public String details(Map<String,Object> model) {
-        model.addAttribute("title", "Hola mundo Spring Boot");
-        // model.put("title","Hola mundo Spring Boot");
-        model.addAttribute("User", user);
+        User user = new User("Juanjo", "Moral");
+        user.setEmail("prueba@correo.com");
+        model.addAttribute("title", "Hola Mundo Spring Boot");
+        model.addAttribute("user", user);
         return "details";
     }
 
